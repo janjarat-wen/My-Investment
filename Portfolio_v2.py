@@ -441,6 +441,10 @@ if page == "Portfolio":
             "Allocation (%)": st.column_config.NumberColumn(
                 "Allocation (%)",
                 format="%.2f%%"
+            ),
+            "Yield Baht/Yr": st.column_config.NumberColumn(
+                "Yield Baht/Yr",
+                format="฿%,.0f"
             )
         }
     )
