@@ -598,7 +598,6 @@ elif page == "Fund":
                 "Type",
                 "Specific Type",
                 "Group",
-                "Fund",
                 "Strategy"
             ]
         ].sort_values("Total", ascending=False),
