@@ -253,7 +253,20 @@ if page == "Portfolio":
 
     income = portfolio["Yield Baht/Yr"].sum()
 
-    avg_yield = income / total if total else 0
+# Calculate Weighted Yield from income-generating assets only
+
+
+    yield_assets = portfolio[
+    (portfolio["Yield Baht/Yr"] > 0) &
+    (portfolio["Total"] > 0)
+    ]
+
+    yield_total = yield_assets["Total"].sum()
+
+    avg_yield = (
+    income / yield_total
+    if yield_total > 0 else 0
+    )    
 
     # KPI
     c1, c2, c3 = st.columns(3)
@@ -347,7 +360,7 @@ if page == "Portfolio":
     with col2:
 
         group_data = (
-            filtered.groupby("Group")["Total"]
+            filtered.groupby("Asset Type")["Total"]
             .sum()
             .reset_index()
             .sort_values("Total", ascending=True)
@@ -356,44 +369,81 @@ if page == "Portfolio":
         fig = px.bar(
             group_data,
             x="Total",
-            y="Group",
+            y="Asset Type",
             orientation="h",
             text="Total",
-            title="Asset by Group"
+            title="Asset Type"
         )
 
         fig.update_traces(
-            texttemplate="%{x:,.0f}",
+            texttemplate="%{text:,.0f}",
             textposition="outside"
         )
 
         fig.update_layout(
-            xaxis=dict(tickformat=",.0f")
+            xaxis_title="Asset Type",
+            yaxis_title="Value (฿)",
+            yaxis_tickformat=",.0f",
+            showlegend=False
         )
 
         st.plotly_chart(
             dark_chart(fig),
             use_container_width=True
         )
+        
+    st.subheader("Asset Allocation - Top 10")
 
-    st.subheader("Portfolio Details")
+    # Calculate allocation by asset name
+    top10 = (
+        filtered.groupby("Name", as_index=False)
+        .agg({
+            "Total": "sum",
+            "Asset Type": "first"
+        })
+        .sort_values("Total", ascending=False)
+        .head(10)
+        .copy()
+    )
 
+    # Calculate allocation percentage
+    total_filtered = filtered["Total"].sum()
+
+    top10["Allocation (%)"] = (
+        top10["Total"] / total_filtered * 100
+        if total_filtered > 0 else 0
+    )
+
+    # Display Top 10 table
     st.dataframe(
-        filtered.sort_values("Total", ascending=False),
+        top10[
+            [
+                "Name",
+                "Asset Type",
+                "Total",
+                "Allocation (%)"
+            ]
+        ],
         use_container_width=True,
         hide_index=True,
         column_config={
+            "Name": st.column_config.TextColumn(
+                "Asset"
+            ),
+            "Asset Type": st.column_config.TextColumn(
+                "Asset Type"
+            ),
             "Total": st.column_config.NumberColumn(
+                "Value (฿)",
                 format="฿%,.0f"
             ),
-            "Yield Rate/Yr": st.column_config.NumberColumn(
+            "Allocation (%)": st.column_config.NumberColumn(
+                "Allocation (%)",
                 format="%.2f%%"
-            ),
-            "Yield Baht/Yr": st.column_config.NumberColumn(
-                format="฿%,.0f"
             )
         }
     )
+    
 
 
 # ==========================================
