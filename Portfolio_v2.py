@@ -9,7 +9,7 @@ import plotly.express as px
 # ==========================================
 
 st.set_page_config(
-    page_title="Investment Dashboard",
+    page_title="JW PORTFOLIO",
     page_icon="📊",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -195,7 +195,7 @@ portfolio, fund, bond, dividend = load_data()
 with st.sidebar:
 
     st.markdown(
-        "<h2 style='text-align:center;'>📊 MY PORTFOLIO</h2>",
+        "<h2 style='text-align:center;'>📊 JW PORTFOLIO</h2>",
         unsafe_allow_html=True
     )
 
@@ -391,12 +391,12 @@ if page == "Portfolio":
             dark_chart(fig),
             use_container_width=True
         )
-        
+
     st.subheader("Asset Allocation - Top 10")
 
     # Calculate allocation by asset name
     top10 = (
-        filtered.groupby("Name", as_index=False)
+        filtered.groupby("Asset Type", as_index=False)
         .agg({
             "Total": "sum",
             "Asset Type": "first"
@@ -418,10 +418,11 @@ if page == "Portfolio":
     st.dataframe(
         top10[
             [
-                "Name",
                 "Asset Type",
+                "Name",
                 "Total",
-                "Allocation (%)"
+                "Allocation (%)",
+                "Yield Baht/Yr"
             ]
         ],
         use_container_width=True,
@@ -535,7 +536,7 @@ elif page == "Fund":
     with col2:
 
         type_data = (
-            filtered.groupby("Specific Type")["Total"]
+            filtered.groupby("Type")["Total"]
             .sum()
             .reset_index()
             .sort_values("Total", ascending=True)
@@ -544,10 +545,10 @@ elif page == "Fund":
         fig = px.bar(
             type_data,
             x="Total",
-            y="Specific Type",
+            y="Type",
             orientation="h",
             text="Total",
-            title="Fund Allocation by Type"
+            title="Allocation by Type"
         )
 
         fig.update_traces(
@@ -560,21 +561,21 @@ elif page == "Fund":
             use_container_width=True
         )
 
-    # Broker Chart
-    broker_data = (
-        filtered.groupby("Broker")["Total"]
+    # Specific Type Chart
+    Sptype_data = (
+        filtered.groupby("Specific Type")["Total"]
         .sum()
         .reset_index()
         .sort_values("Total", ascending=True)
     )
 
     fig = px.bar(
-        broker_data,
+        Sptype_data,
         x="Total",
-        y="Broker",
+        y="Specific Type",
         orientation="h",
         text="Total",
-        title="Fund Allocation by Broker"
+        title="Allocation by Specific Type"
     )
 
     fig.update_traces(
@@ -590,13 +591,24 @@ elif page == "Fund":
     st.subheader("Fund Details")
 
     st.dataframe(
-        filtered.sort_values("Total", ascending=False),
+        filtered[
+            [
+                "Fund",
+                "Total"
+                "Type",
+                "Specific Type",
+                "Group",
+                "Fund",
+                "Strategy"
+            ]
+        ].sort_values("Total", ascending=False),
         use_container_width=True,
         hide_index=True,
         column_config={
             "Total": st.column_config.NumberColumn(
+                "Total",
                 format="฿%,.0f"
-            )
+                )
         }
     )
 
