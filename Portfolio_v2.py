@@ -562,7 +562,7 @@ elif page == "Fund":
         )
 
     # Specific Type Chart
-    st.divider_spec()
+    st.divider()
 
     col1, col2 = st.columns(2)
 
