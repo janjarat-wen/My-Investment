@@ -76,7 +76,7 @@ import pandas as pd
 import gspread
 from google.oauth2.service_account import Credentials
 
-SPREADSHEET_ID = "116GxxgQ7Qk5aifs_R-haUNTLIKPzVLY2"
+SPREADSHEET_ID = "1JaAat1fG-JCgp5FigRCSx3HSrsqs4YvUAUVvhDuwWXA"
 
 
 @st.cache_resource
