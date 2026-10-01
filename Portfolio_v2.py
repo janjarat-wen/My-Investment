@@ -415,6 +415,7 @@ if page == "Portfolio":
     )
 
     # Display Top 10 table
+    st.write(top10.columns.tolist())
     st.dataframe(
         top10[
             [
