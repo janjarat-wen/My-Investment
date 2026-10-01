@@ -576,7 +576,7 @@ elif page == "Fund":
 
         fig = px.pie(
             type_data,
-            names="Group",
+            names="Type",
             values="Total",
             hole=0.4,
             title="Allocation by Type"
@@ -601,10 +601,10 @@ elif page == "Fund":
 
         fig = px.pie(
             Sptype_data,
-            names="Group",
+            names="Specific Type",
             values="Total",
             hole=0.4,
-            title="Allocation by Type"
+            title="Allocation by Specific Type"
         )
 
         fig.update_traces(
