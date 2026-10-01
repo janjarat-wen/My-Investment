@@ -501,7 +501,7 @@ elif page == "Fund":
     filtered = fund[
         fund["Type"].isin(types)
         & fund["Group"].isin(groups)
-        & fund["Broker"].isin(brokers)
+        #& fund["Broker"].isin(brokers)
     ].copy()
 
     st.divider()
@@ -520,7 +520,7 @@ elif page == "Fund":
             group_data,
             names="Group",
             values="Total",
-            hole=0.6,
+            hole=0.4,
             title="CORE vs SAT"
         )
 
@@ -562,6 +562,61 @@ elif page == "Fund":
         )
 
     # Specific Type Chart
+    st.divider_spec()
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+
+        type_data = (
+            filtered.groupby("Type")["Total"]
+            .sum()
+            .reset_index()
+        )
+
+        fig = px.pie(
+            Sptype_data,
+            names="Group",
+            values="Total",
+            hole=0.4,
+            title="Allocation by Type"
+        )
+
+        fig.update_traces(
+            textinfo="label+percent"
+        )
+
+        st.plotly_chart(
+            dark_chart(fig),
+            use_container_width=True
+        )
+
+    with col2:
+
+        Sptype_data = (
+            filtered.groupby("Specific Type")["Total"]
+            .sum()
+            .reset_index()
+        )
+
+        fig = px.pie(
+            Sptype_data,
+            names="Group",
+            values="Total",
+            hole=0.4,
+            title="Allocation by Type"
+        )
+
+        fig.update_traces(
+            textinfo="label+percent"
+        )
+
+        st.plotly_chart(
+            dark_chart(fig),
+            use_container_width=True
+        )
+
+
     Sptype_data = (
         filtered.groupby("Specific Type")["Total"]
         .sum()
@@ -576,18 +631,17 @@ elif page == "Fund":
         orientation="h",
         text="Total",
         title="Allocation by Specific Type"
-    )
+        )
 
     fig.update_traces(
         texttemplate="%{x:,.0f}",
         textposition="outside"
-    )
+        )
 
     st.plotly_chart(
         dark_chart(fig),
         use_container_width=True
-    )
-
+        )
     st.subheader("Fund Details")
 
     st.dataframe(
