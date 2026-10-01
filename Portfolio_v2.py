@@ -397,7 +397,7 @@ if page == "Portfolio":
     # Calculate allocation by asset name
     top10 = (
         filtered.groupby(
-            ["Asset Type", "Name"],
+            ["Asset Type"],
             as_index=False
         )
         .agg({
@@ -418,12 +418,11 @@ if page == "Portfolio":
     )
 
     # Display Top 10 table
-    st.write(top10.columns.tolist())
+    # st.write(top10.columns.tolist())
     st.dataframe(
         top10[
             [
                 "Asset Type",
-                "Name",
                 "Total",
                 "Allocation (%)",
                 "Yield Baht/Yr"
@@ -432,9 +431,6 @@ if page == "Portfolio":
         use_container_width=True,
         hide_index=True,
         column_config={
-            "Name": st.column_config.TextColumn(
-                "Asset"
-            ),
             "Asset Type": st.column_config.TextColumn(
                 "Asset Type"
             ),
