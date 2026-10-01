@@ -594,7 +594,7 @@ elif page == "Fund":
         filtered[
             [
                 "Fund",
-                "Total"
+                "Total",
                 "Type",
                 "Specific Type",
                 "Group",
