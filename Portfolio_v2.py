@@ -396,10 +396,13 @@ if page == "Portfolio":
 
     # Calculate allocation by asset name
     top10 = (
-        filtered.groupby("Asset Type", as_index=False)
+        filtered.groupby(
+            ["Asset Type", "Name"],
+            as_index=False
+        )
         .agg({
             "Total": "sum",
-            "Asset Type": "first"
+            "Yield Baht/Yr": "sum"
         })
         .sort_values("Total", ascending=False)
         .head(10)
