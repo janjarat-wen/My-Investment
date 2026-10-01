@@ -493,15 +493,15 @@ elif page == "Fund":
 
     with c3:
         brokers = st.multiselect(
-            "Broker",
-            fund["Broker"].dropna().unique(),
-            default=fund["Broker"].dropna().unique()
+            "Specific Type",
+            fund["Specific Type"].dropna().unique(),
+            default=fund["Specific Type"].dropna().unique()
         )
 
     filtered = fund[
         fund["Type"].isin(types)
         & fund["Group"].isin(groups)
-        #& fund["Broker"].isin(brokers)
+        & fund["Specific Type"].isin(brokers)
     ].copy()
 
     st.divider()
@@ -575,7 +575,7 @@ elif page == "Fund":
         )
 
         fig = px.pie(
-            Sptype_data,
+            type_data,
             names="Group",
             values="Total",
             hole=0.4,
